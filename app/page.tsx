@@ -1,42 +1,54 @@
+'use client';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useAuth } from '@/components/AuthProvider';
 
 const features = [
   {
     icon: '🔐',
     title: 'Encrypted Storage',
     desc: 'Passwords are AES-256 encrypted before hitting the database.',
-    color: 'from-indigo-500 to-violet-500',
     bg: 'bg-indigo-50 dark:bg-indigo-900/20',
   },
   {
     icon: '🔍',
     title: 'Search & Filter',
     desc: 'Find any entry instantly by title, content, or tag.',
-    color: 'from-sky-500 to-cyan-500',
     bg: 'bg-sky-50 dark:bg-sky-900/20',
   },
   {
     icon: '📦',
     title: 'Export Anytime',
     desc: 'Download all your data as JSON or CSV whenever you need.',
-    color: 'from-emerald-500 to-teal-500',
     bg: 'bg-emerald-50 dark:bg-emerald-900/20',
   },
   {
     icon: '📌',
     title: 'Pin & Organise',
     desc: 'Pin important entries to the top and tag everything.',
-    color: 'from-amber-500 to-orange-500',
     bg: 'bg-amber-50 dark:bg-amber-900/20',
   },
 ];
 
 export default function Home() {
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  // If user is already logged in, send them straight to dashboard
+  useEffect(() => {
+    if (!loading && user) {
+      router.replace('/dashboard');
+    }
+  }, [user, loading, router]);
+
+  // While Firebase is resolving auth state, show nothing to avoid flash
+  if (loading || user) return null;
+
   return (
     <div className="flex flex-1 flex-col">
       {/* Hero */}
       <section className="relative flex flex-col items-center justify-center overflow-hidden px-4 py-28 text-center">
-        {/* Decorative blobs */}
         <div className="pointer-events-none absolute -top-32 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-indigo-200/40 blur-3xl dark:bg-indigo-900/30" />
         <div className="pointer-events-none absolute bottom-0 right-0 h-64 w-64 rounded-full bg-violet-200/30 blur-3xl dark:bg-violet-900/20" />
 
@@ -59,7 +71,7 @@ export default function Home() {
         <div className="flex flex-wrap items-center justify-center gap-4">
           <Link
             href="/signup"
-            className="rounded-xl bg-linear-to-r from-indigo-600 to-violet-600 px-8 py-3 font-bold text-white shadow-lg shadow-indigo-200 transition hover:shadow-indigo-300 hover:opacity-90 dark:shadow-indigo-900/40"
+            className="rounded-xl bg-linear-to-r from-indigo-600 to-violet-600 px-8 py-3 font-bold text-white shadow-lg shadow-indigo-200 transition hover:opacity-90 hover:shadow-indigo-300 dark:shadow-indigo-900/40"
           >
             Get Started Free
           </Link>
@@ -82,7 +94,7 @@ export default function Home() {
             {features.map(f => (
               <div
                 key={f.title}
-                className={`group rounded-2xl border border-zinc-200/80 ${f.bg} p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md dark:border-zinc-700/50`}
+                className={`rounded-2xl border border-zinc-200/80 ${f.bg} p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md dark:border-zinc-700/50`}
               >
                 <div className="mb-3 text-3xl">{f.icon}</div>
                 <h3 className="mb-1.5 font-bold text-zinc-800 dark:text-zinc-100">
