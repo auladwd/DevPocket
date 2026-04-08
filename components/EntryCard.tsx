@@ -53,7 +53,7 @@ export default function EntryCard({ entry, onDelete }: Props) {
         </Link>
 
         {/* Content preview — always exactly 3 lines */}
-        <div className="h-18 shrink-0">
+        <div className="h-25 shrink-0">
           {entry.content ? (
             <pre className="h-full overflow-hidden rounded-lg bg-zinc-50 px-2.5 py-2 font-mono text-xs leading-6 text-zinc-500 dark:bg-zinc-900/70 dark:text-zinc-400 line-clamp-3 whitespace-pre-wrap break-all">
               {entry.content}
